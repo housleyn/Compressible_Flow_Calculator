@@ -1,0 +1,10 @@
+{
+    "python.testing.pytestArgs": [
+        "Compressible_flow_unittests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.analysis.extraPaths": [
+        "./Compressible_flow_calculator"
+    ]
+}
