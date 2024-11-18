@@ -2,6 +2,7 @@
   "Compressible_flow_calculator/Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world",
   "Compressible_flow_calculator/Compressible_flow_unittests/test_normalShocks_unittests.py::test_print_hello_world2",
   "Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world",
+  "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_temperature_ratio",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_print_hello_world",
   "Compressible_flow_unittests/test_normalShocks_unittests.py::test_print_hello_world2",
   "Compressible_flow_unittests/test_normal_shocks.py::test_add_two_numbers"
