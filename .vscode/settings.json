@@ -5,6 +5,7 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.analysis.extraPaths": [
-        "./Compressible_flow_calculator"
+        "./Compressible_flow_calculator",
+        "./Compressible_flow_equations"
     ]
 }
