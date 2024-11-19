@@ -106,3 +106,39 @@ def test_isentropic_mach_angle():
     assert result.p_ps == pytest.approx(  0.05779566)
     assert result.rho_rhos == pytest.approx( 0.13050870)
     assert result.a_as == pytest.approx( 3.93807778)
+
+def test_isentropic_PM_angle():
+    calculation_type = "PM Angle(deg.)"
+    value = 20
+
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx( 1.77497230)
+    assert result.mach_angle == pytest.approx(34.2905002)
+    assert result.pm_angle == pytest.approx(19.9998981)
+    assert result.t_t0 == pytest.approx( 0.61345728)
+    assert result.p_p0 == pytest.approx(0.18081945)
+    assert result.rho_rho0 == pytest.approx(0.29475476)
+    assert result.t_ts == pytest.approx(0.73614874)
+    assert result.p_ps == pytest.approx(0.34227842)
+    assert result.rho_rhos == pytest.approx( 0.46495823)
+    assert result.a_as == pytest.approx( 1.41225034)
+
+def test_isentropic_mach_number():
+    calculation_type = "Mach Number"
+    value = 20
+
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx(20)
+    assert result.mach_angle == pytest.approx( 2.86598398)
+    assert result.pm_angle == pytest.approx(116.195297)
+    assert result.t_t0 == pytest.approx(0.01234567)
+    assert result.p_p0 == pytest.approx( 2.090751581287687e-07, abs=1e-7)
+    assert result.rho_rho0 == pytest.approx(1.6935087808430262e-05)
+    assert result.t_ts == pytest.approx( 0.01481481)
+    assert result.p_ps == pytest.approx(3.95764e-007)
+    assert result.rho_rhos == pytest.approx(2.671410126530299e-05)
+    assert result.a_as == pytest.approx( 15377.3437)

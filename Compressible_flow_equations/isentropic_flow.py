@@ -50,7 +50,7 @@ class isentropicFlow:
                 raise ValueError("Mach angle must be between 0 and 90")
             m = 1.0 / math.sin(value * math.pi / 180.0)
 
-        elif calculation_type == "PM angle(deg.)":
+        elif calculation_type == "PM Angle(deg.)":
             numax = (math.sqrt((g + 1.0) / (g - 1.0)) - 1.0) * 90.0
             if value <= 0.0 or value >= numax:
                 raise ValueError(f"Prandtl-Meyer angle must be between 0 and {numax}")
