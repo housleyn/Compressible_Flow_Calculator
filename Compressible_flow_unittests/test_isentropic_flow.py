@@ -1,4 +1,5 @@
 import pytest
+import math
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -142,3 +143,82 @@ def test_isentropic_mach_number():
     assert result.p_ps == pytest.approx(3.95764e-007)
     assert result.rho_rhos == pytest.approx(2.671410126530299e-05)
     assert result.a_as == pytest.approx( 15377.3437)
+
+
+def test_isentropic_tt0_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # T/T0 greater than 1
+    with pytest.raises(ValueError, match="T/T0 must be between 0 and 1"):
+        flow.calculate("T/T0", 1.2)
+
+    # T/T0 less than or equal to 0
+    with pytest.raises(ValueError, match="T/T0 must be between 0 and 1"):
+        flow.calculate("T/T0", 0)
+
+def test_isentropic_pp0_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # p/p0 greater than 1
+    with pytest.raises(ValueError, match="p/p0 must be between 0 and 1"):
+        flow.calculate("p/p0", 1.1)
+
+    # p/p0 less than or equal to 0
+    with pytest.raises(ValueError, match="p/p0 must be between 0 and 1"):
+        flow.calculate("p/p0", -0.5)
+
+def test_isentropic_rho_rho0_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # rho/rho0 greater than 1
+    with pytest.raises(ValueError, match="rho/rho0 must be between 0 and 1"):
+        flow.calculate("rho/rho0", 1.5)
+
+    # rho/rho0 less than or equal to 0
+    with pytest.raises(ValueError, match="rho/rho0 must be between 0 and 1"):
+        flow.calculate("rho/rho0", 0)
+
+def test_isentropic_area_ratio_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # A/A* less than or equal to 1
+    with pytest.raises(ValueError, match="A/A\\* must be greater than 1"):
+        flow.calculate("A/A*(subsonic)", 0.9)
+
+    with pytest.raises(ValueError, match="A/A\\* must be greater than 1"):
+        flow.calculate("A/A*(supersonic)", 1.0)
+
+def test_isentropic_mach_angle_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # Mach angle less than or equal to 0
+    with pytest.raises(ValueError, match="Mach angle must be between 0 and 90"):
+        flow.calculate("Mach Angle(deg.)", -10)
+
+    # Mach angle greater than or equal to 90
+    with pytest.raises(ValueError, match="Mach angle must be between 0 and 90"):
+        flow.calculate("Mach Angle(deg.)", 100)
+
+def test_isentropic_pm_angle_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # Prandtl-Meyer angle less than or equal to 0
+    with pytest.raises(ValueError, match="Prandtl-Meyer angle must be between 0 and"):
+        flow.calculate("PM Angle(deg.)", -1)
+
+    # Prandtl-Meyer angle greater than maximum
+    max_pm_angle = (math.sqrt((1.4 + 1.0) / (1.4 - 1.0)) - 1.0) * 90.0
+    with pytest.raises(ValueError, match=f"Prandtl-Meyer angle must be between 0 and {max_pm_angle}"):
+        flow.calculate("PM Angle(deg.)", max_pm_angle + 1)
+
+def test_isentropic_mach_number_out_of_scope():
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+
+    # Mach number less than or equal to 0
+    with pytest.raises(ValueError, match="Mach number must be greater than 0"):
+        flow.calculate("Mach Number", -5)
+
+def test_isentropic_invalid_gamma():
+    with pytest.raises(ValueError, match="gamma must be greater than 1"):
+        flow = isentropic_flow.isentropicFlow(gamma=.9)
+        flow.calculate("T/T0", 0.8)
