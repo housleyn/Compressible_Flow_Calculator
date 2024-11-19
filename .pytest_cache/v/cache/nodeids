@@ -3,6 +3,7 @@
   "Compressible_flow_calculator/Compressible_flow_unittests/test_normalShocks_unittests.py::test_print_hello_world2",
   "Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_density_ratio",
+  "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_mach_angle",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_pressure_ratio",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_subsonic_area_ratio",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_supersonic_area_ratio",

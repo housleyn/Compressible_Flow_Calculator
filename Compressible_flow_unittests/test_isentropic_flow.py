@@ -88,3 +88,21 @@ def test_isentropic_supersonic_area_ratio():
     assert result.p_ps == pytest.approx( 0.49065491)
     assert result.rho_rhos == pytest.approx(  0.60134793)
     assert result.a_as == pytest.approx(1.2)
+
+def test_isentropic_mach_angle():
+    calculation_type = "Mach Angle(deg.)"
+    value = 20
+
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx( 2.92380440)
+    assert result.mach_angle == pytest.approx(20)
+    assert result.pm_angle == pytest.approx( 48.2654699)
+    assert result.t_t0 == pytest.approx(  0.36904094)
+    assert result.p_p0 == pytest.approx( 0.03053239)
+    assert result.rho_rho0 == pytest.approx( 0.08273444)
+    assert result.t_ts == pytest.approx( 0.44284913)
+    assert result.p_ps == pytest.approx(  0.05779566)
+    assert result.rho_rhos == pytest.approx( 0.13050870)
+    assert result.a_as == pytest.approx( 3.93807778)
