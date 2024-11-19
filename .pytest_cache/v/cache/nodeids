@@ -37,5 +37,14 @@
   "Compressible_flow_unittests/test_normal_shocks.py::test_normal_temperature_ratio",
   "Compressible_flow_unittests/test_normal_shocks.py::test_normal_temperature_ratio_out_of_scope",
   "Compressible_flow_unittests/test_normal_shocks.py::test_normal_total_pressure_ratio",
-  "Compressible_flow_unittests/test_normal_shocks.py::test_normal_total_pressure_ratio_out_of_scope"
+  "Compressible_flow_unittests/test_normal_shocks.py::test_normal_total_pressure_ratio_out_of_scope",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_invalid_gamma",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_invalid_m1",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_invalid_m1n",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_invalid_turn_angle",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_invalid_wave_angle",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_m1n",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_turn_angle_strong_shock",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_turn_angle_weak_shock",
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_wave_angle"
 ]
