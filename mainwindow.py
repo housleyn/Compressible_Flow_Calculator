@@ -6,7 +6,7 @@ from GUI_configuration.obliqueShockPage import ObliqueShocksPage
 from GUI_configuration.fannoFlowPage import FannoFlowPage
 from GUI_configuration.rayleighFlowPage import RayleighFlowPage
 from GUI_configuration.shockTubePage import ShockTubePage
-from GUI_configuration.normalShockLocationPage import NormalShockLocationsPage
+
 
 class CompressibleFlowApp(tk.Tk):
     """Main application to manage multiple pages."""
@@ -24,7 +24,7 @@ class CompressibleFlowApp(tk.Tk):
 
         # Initialize pages
         for Page in (HomePage, IsentropicFlowPage, NormalShockPage, ObliqueShocksPage, 
-                     FannoFlowPage, RayleighFlowPage, ShockTubePage, NormalShockLocationsPage):
+                     FannoFlowPage, RayleighFlowPage, ShockTubePage):
             page_name = Page.__name__
             frame = Page(parent=container, controller=self)
             self.frames[page_name] = frame

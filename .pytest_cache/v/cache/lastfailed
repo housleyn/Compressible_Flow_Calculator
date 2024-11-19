@@ -1,3 +1,14 @@
 {
-  "Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world": true
+  "Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_area_in_inches": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_convert_area_in_inches_to_meters": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_convert_area_in_meters_to_inches": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_theoretical_back_pressure_subsonic": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_theoretical_back_pressure_supersonic": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_mass_flow_rate": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_theoretical_pressure_profile_no_shock": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_theoretical_pressure_profile_with_shock": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_shock_location": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_exit_mach_number": true,
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_position_from_area": true
 }
