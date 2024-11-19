@@ -11,14 +11,46 @@ def test_isentropic_temperature_ratio():
     flow = isentropic_flow.isentropicFlow(gamma=1.4)
     result = flow.calculate(calculation_type,value)
 
-    assert result.mach_number == pytest.approx(1.11803398), "Mach number failed for temperature ratio, ISF"
-    assert result.mach_angle == pytest.approx(63.4349488), "mach angle failed for temperature ratio, ISF"
-    assert result.pm_angle == pytest.approx(1.69461163), "PM angle failed for temperature ratio, isf"
-    assert result.t_t0 == pytest.approx(0.8), "Temperature ratio failed for temperature ratio, isf"
-    assert result.p_p0 == pytest.approx(0.45794672), "pressure ratio failed for temperature ratio, isf"
-    assert result.rho_rho0 == pytest.approx( 0.57243340), "density rario failed for temeprature ratio, isf"
-    assert result.t_ts == pytest.approx(0.96), "critcial t ratio failed for temperature ratio, isf"
-    assert result.p_ps == pytest.approx(0.86686070), "critical pressure ratio failed for t ratio, isf"
-    assert result.rho_rhos == pytest.approx(0.90297989), "critical density failed for t ratio, isf"
-    assert result.a_as == pytest.approx(1.01095376), "critical area reatio failed for t ratio, isf"
+    assert result.mach_number == pytest.approx(1.11803398)
+    assert result.mach_angle == pytest.approx(63.4349488)
+    assert result.pm_angle == pytest.approx(1.69461163)
+    assert result.t_t0 == pytest.approx(0.8)
+    assert result.p_p0 == pytest.approx(0.45794672)
+    assert result.rho_rho0 == pytest.approx( 0.57243340)
+    assert result.t_ts == pytest.approx(0.96)
+    assert result.p_ps == pytest.approx(0.86686070)
+    assert result.rho_rhos == pytest.approx(0.90297989)
+    assert result.a_as == pytest.approx(1.01095376)
 
+def test_isentropic_pressure_ratio():
+    calculation_type = "p/p0"
+    value = 0.8
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx(0.57372274)
+    assert result.t_t0 == pytest.approx(0.93823455)
+    assert result.p_p0 == pytest.approx(0.8)
+    assert result.rho_rho0 == pytest.approx(0.85266524)
+    assert result.t_ts == pytest.approx( 1.12588146)
+    assert result.p_ps == pytest.approx( 1.51434332)
+    assert result.rho_rhos == pytest.approx( 1.34502908)
+    assert result.a_as == pytest.approx( 1.22129313)
+
+def test_isentropic_density_ratio():
+    calculation_type = "rho/rho0"
+    value = 0.8
+
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx( 0.68323522)
+   
+   
+    assert result.t_t0 == pytest.approx( 0.91461010)
+    assert result.p_p0 == pytest.approx(0.73168808)
+    assert result.rho_rho0 == pytest.approx( .8)
+    assert result.t_ts == pytest.approx(1.09753212)
+    assert result.p_ps == pytest.approx(1.38503370)
+    assert result.rho_rhos == pytest.approx(1.26195277)
+    assert result.a_as == pytest.approx(1.10707751)
