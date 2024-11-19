@@ -46,5 +46,17 @@
   "Compressible_flow_unittests/test_oblique_shocks.py::test_m1n",
   "Compressible_flow_unittests/test_oblique_shocks.py::test_turn_angle_strong_shock",
   "Compressible_flow_unittests/test_oblique_shocks.py::test_turn_angle_weak_shock",
-  "Compressible_flow_unittests/test_oblique_shocks.py::test_wave_angle"
+  "Compressible_flow_unittests/test_oblique_shocks.py::test_wave_angle",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_Si",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_Sr_and_Mr",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_a",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_a_zone_values",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_mach_from_shock_speed",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_v2_and_v3",
+  "Compressible_flow_unittests/test_shock_tube.py::test_calculate_v_CS_and_v_EW",
+  "Compressible_flow_unittests/test_shock_tube.py::test_pressure_zone_values",
+  "Compressible_flow_unittests/test_shock_tube.py::test_rho_zone_values",
+  "Compressible_flow_unittests/test_shock_tube.py::test_run_calculations",
+  "Compressible_flow_unittests/test_shock_tube.py::test_temperature_zone_values",
+  "Compressible_flow_unittests/test_shock_tube.py::test_velocity_zone_values"
 ]
