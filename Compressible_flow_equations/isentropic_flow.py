@@ -32,7 +32,7 @@ class isentropicFlow:
                 raise ValueError("rho/rho0 must be between 0 and 1")
             m = math.sqrt(2.0 * ((1.0 / math.pow(value, (g - 1.0))) - 1.0) / (g - 1.0))
 
-        elif calculation_type == "A/A*(subsonic)" or calculation_type == "area_ratio_supersonic":
+        elif calculation_type == "A/A*(subsonic)" or calculation_type == "A/A*(supersonic)":
             if value <= 1.0:
                 raise ValueError("A/A* must be greater than 1")
             mnew = 0.00001
