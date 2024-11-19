@@ -21,6 +21,6 @@ class HomePage(tk.Frame):
         tk.Button(self, text="Rayleigh Flow Calculations",
                   command=lambda: controller.show_frame("RayleighFlowPage")).pack(pady=10)
         tk.Button(self, text="Shock Tubes Calculations",
-                  command=lambda: controller.show_frame("ShockTubesPage")).pack(pady=10)
+                  command=lambda: controller.show_frame("ShockTubePage")).pack(pady=10)
         tk.Button(self, text="Normal Shock Locations",
                   command=lambda: controller.show_frame("NormalShockLocationsPage")).pack(pady=10)
