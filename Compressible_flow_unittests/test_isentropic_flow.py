@@ -54,3 +54,19 @@ def test_isentropic_density_ratio():
     assert result.p_ps == pytest.approx(1.38503370)
     assert result.rho_rhos == pytest.approx(1.26195277)
     assert result.a_as == pytest.approx(1.10707751)
+
+def test_isentropic_subsonic_area_ratio():
+    calculation_type = "A/A*(subsonic)"
+    value = 1.2
+
+    flow = isentropic_flow.isentropicFlow(gamma=1.4)
+    result = flow.calculate(calculation_type,value)
+
+    assert result.mach_number == pytest.approx(0.59024789)
+    assert result.t_t0 == pytest.approx( 0.93486031)
+    assert result.p_p0 == pytest.approx(0.78997535)
+    assert result.rho_rho0 == pytest.approx( 0.84501966)
+    assert result.t_ts == pytest.approx(1.12183238)
+    assert result.p_ps == pytest.approx(1.49536738)
+    assert result.rho_rhos == pytest.approx( 1.33296863)
+    assert result.a_as == pytest.approx(1.2)
