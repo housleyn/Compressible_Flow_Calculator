@@ -1,6 +1,13 @@
 [
   "Compressible_flow_calculator/Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world",
   "Compressible_flow_calculator/Compressible_flow_unittests/test_normalShocks_unittests.py::test_print_hello_world2",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_4fLmax_D_limit",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_calculate_4fLmax_D",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_calculate_properties_4fL_D_subsonic",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_calculate_properties_4fL_D_supersonic",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_calculate_properties_p_pstar",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_invalid_calculation_type",
+  "Compressible_flow_unittests/test_fanno_flow.py::test_invalid_gamma",
   "Compressible_flow_unittests/test_isentropicFlow_unittests.py::test_print_hello_world",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_PM_angle",
   "Compressible_flow_unittests/test_isentropic_flow.py::test_isentropic_area_ratio_out_of_scope",

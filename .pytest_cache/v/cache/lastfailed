@@ -10,5 +10,6 @@
   "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_theoretical_pressure_profile_with_shock": true,
   "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_shock_location": true,
   "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_exit_mach_number": true,
-  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_position_from_area": true
+  "Compressible_flow_unittests/test_normal_shock_location.py::test_calculate_position_from_area": true,
+  "Compressible_flow_unittests/test_fanno_flow.py::test_4fLmax_D_limit": true
 }
