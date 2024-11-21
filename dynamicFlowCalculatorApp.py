@@ -6,6 +6,7 @@ from GUI_configuration.obliqueShockPage import ObliqueShockPage
 from GUI_configuration.fannoFlowPage import FannoFlowPage
 from GUI_configuration.rayleighFlowPage import RayleighFlowPage
 from GUI_configuration.shockTubePage import ShockTubePage  
+from GUI_configuration.superAirfoil import SupersonicAirfoilPage 
 
 
 class DynamicFlowCalculatorApp(tk.Tk):
@@ -28,6 +29,10 @@ class DynamicFlowCalculatorApp(tk.Tk):
         # Add the shock tube page tab
         self.shock_tube_tab = ShockTubePage(self.notebook)
         self.notebook.add(self.shock_tube_tab, text="Shock Tube")
+
+        # Add the supersonic airfoil page tab
+        self.supersonic_airfoil_tab = SupersonicAirfoilPage(self.notebook)
+        self.notebook.add(self.supersonic_airfoil_tab, text="Supersonic Airfoil")
 
         # Future tabs can be added here as needed
 
