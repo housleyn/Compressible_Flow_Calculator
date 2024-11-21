@@ -57,6 +57,7 @@
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_T0_T0s_out_of_scope",
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_T_Ts_out_of_scope",
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_calculate_mach_number",
+  "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_calculate_mach_p_ps",
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_calculations",
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_invalid_gamma",
   "Compressible_flow_unittests/test_rayleigh_flow.py::test_rayleigh_mach_from_T0_T0s",

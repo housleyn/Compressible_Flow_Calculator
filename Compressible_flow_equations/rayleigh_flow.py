@@ -20,14 +20,17 @@ class RayleighFlow:
 
     def calculate_p0_p0s(self, M):
         return ((1 + self.gamma) / (1 + self.gamma * M**2)) * ((2 + (self.gamma - 1) * M**2) / (self.gamma + 1))**(self.gamma / (self.gamma - 1))
-
+    
+    def calculate_mach_number_p_ps(self,target_p_ps):
+        return np.sqrt(((1+self.gamma)/self.gamma)*(target_p_ps**-1)-(1/self.gamma))
+    
     def calculate_mach_number(self, target_p0_p0s, solution_type='subsonic'):
         if solution_type == 'subsonic':
-            max_p0_p0s_subsonic = self.calculate_p0_p0s(0)  # p0/p0s at M = 0
+            max_p0_p0s_subsonic = self.calculate_p0_p0s(0)  
             if target_p0_p0s > max_p0_p0s_subsonic:
                 raise ValueError(f"Error: For subsonic flow, p0/p0* must be ≤ {max_p0_p0s_subsonic:.4f} and >1")
             if target_p0_p0s < 1.0:
-                raise ValueError("Error: For subsonic flow, p0/p0* must be > 1")
+                raise ValueError(f"Error: For subsonic flow, p0/p0* must be ≤ {max_p0_p0s_subsonic:.4f} and >1")
 
         if target_p0_p0s < 1.0:
             raise ValueError("Error: The input p0/p0* must be > 1")

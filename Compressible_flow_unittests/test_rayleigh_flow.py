@@ -55,7 +55,10 @@ def test_rayleigh_calculate_mach_number():
     # Supersonic case
     M_supersonic = flow.calculate_mach_number(target_p0_p0s=1.2, solution_type='supersonic')
     assert M_supersonic == pytest.approx( 1.63973575, rel=1e-2)
-
+def test_rayleigh_calculate_mach_p_ps():
+    flow = RayleighFlow(gamma=1.4)
+    M = flow.calculate_mach_number_p_ps(target_p_ps = .8)
+    assert M == pytest.approx( 1.19522860,rel=1e-2 )
 def test_rayleigh_mach_from_T0_T0s():
     flow = RayleighFlow(gamma=1.4)
 
