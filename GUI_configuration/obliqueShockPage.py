@@ -30,10 +30,10 @@ class ObliqueShockPage(tk.Frame):
 
         # Third Input Type Selection
         tk.Label(input_frame, text="Select Input Type:").grid(row=2, column=0, padx=5, pady=5)
-        input_type_var = tk.StringVar(value="Turn angle (weak)")  # Default value
+        input_type_var = tk.StringVar(value="Turn angle (weak shock)")  # Default value
         input_type_dropdown = ttk.OptionMenu(
-            input_frame, input_type_var, "Turn angle (weak)", 
-            "Turn angle (weak)", "Turn angle (strong)", "Wave angle", "M1n"
+            input_frame, input_type_var, "Turn angle (weak shock)", 
+            "Turn angle (weak shock)", "Turn angle (strong shock)", "Wave angle", "M1n"
         )
         input_type_dropdown.grid(row=2, column=1, padx=5, pady=5)
 
@@ -43,7 +43,7 @@ class ObliqueShockPage(tk.Frame):
         input_value_entry.grid(row=3, column=1, padx=5, pady=5)
 
         # Result Output
-        result_text = tk.Text(self, height=10, width=50)
+        result_text = tk.Text(self, height=15, width=60)
         result_text.pack(pady=10)
 
         # Calculate Button
@@ -56,18 +56,8 @@ class ObliqueShockPage(tk.Frame):
                 input_value = float(input_value_entry.get())
 
                 # Perform calculation
-                flow = ObliqueShock(gamma)
-
-                if input_type == "Turn angle (weak)":
-                    result = flow.calculate_turn_angle_weak(mach, input_value)
-                elif input_type == "Turn angle (strong)":
-                    result = flow.calculate_turn_angle_strong(mach, input_value)
-                elif input_type == "Wave angle":
-                    result = flow.calculate_wave_angle(mach, input_value)
-                elif input_type == "M1n":
-                    result = flow.calculate_m1n(mach, input_value)
-                else:
-                    raise ValueError("Invalid input type selected.")
+                shock = ObliqueShock(gamma)
+                result = shock.calculate(input_type, mach, input_value)
 
                 # Display results
                 result_text.delete(1.0, tk.END)
@@ -75,9 +65,16 @@ class ObliqueShockPage(tk.Frame):
                 result_text.insert(tk.END, f"Mach Number: {mach}\n")
                 result_text.insert(tk.END, f"Input Type: {input_type}\n")
                 result_text.insert(tk.END, f"Input Value: {input_value}\n\n")
-                result_text.insert(tk.END, f"Pressure Ratio (p2/p1): {result.p2_p1}\n")
-                result_text.insert(tk.END, f"Density Ratio (rho2/rho1): {result.rho2_rho1}\n")
-                result_text.insert(tk.END, f"Temperature Ratio (T2/T1): {result.T2_T1}\n")
+                result_text.insert(tk.END, "Calculated Properties:\n")
+                result_text.insert(tk.END, f"  Wave Angle (β): {result['Wave Angle']:.4f}°\n")
+                result_text.insert(tk.END, f"  Turn Angle (δ): {result['Turn Angle']:.4f}°\n")
+                result_text.insert(tk.END, f"  M1n: {result['M1n']:.4f}\n")
+                result_text.insert(tk.END, f"  M2n: {result['M2n']:.4f}\n")
+                result_text.insert(tk.END, f"  M2: {result['M2']:.4f}\n")
+                result_text.insert(tk.END, f"  p2/p1: {result['p2/p1']:.4f}\n")
+                result_text.insert(tk.END, f"  p02/p01: {result['p02/p01']:.4f}\n")
+                result_text.insert(tk.END, f"  rho2/rho1: {result['rho2/rho1']:.4f}\n")
+                result_text.insert(tk.END, f"  T2/T1: {result['T2/T1']:.4f}\n")
             except ValueError as e:
                 result_text.delete(1.0, tk.END)
                 result_text.insert(tk.END, f"Error: {str(e)}\n")
