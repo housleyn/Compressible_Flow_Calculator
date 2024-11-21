@@ -42,27 +42,30 @@ class DynamicFlowCalculatorApp(tk.Tk):
         container = tk.Frame(self.dynamic_calculator_tab)
         container.pack(fill="both", expand=True)
 
-        canvas = tk.Canvas(container)
-        scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas)
+        self.canvas = tk.Canvas(container)
+        scrollbar = tk.Scrollbar(container, orient="vertical", command=self.canvas.yview)
+        scrollable_frame = tk.Frame(self.canvas)
 
         scrollable_frame.bind(
             "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
 
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
+        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=scrollbar.set)
 
-        canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
         # Enable mouse wheel scrolling
-        self.bind_mouse_wheel(canvas)
+        self.bind_mouse_wheel(self.canvas)
 
         # Track the number of calculators dynamically
         self.calculator_count = 0
         self.scrollable_frame = scrollable_frame
+
+        # Dictionary to track calculators by ID
+        self.calculator_frames = {}
 
         # Start with the first dropdown menu
         self.add_calculator_dropdown(scrollable_frame)
@@ -104,17 +107,96 @@ class DynamicFlowCalculatorApp(tk.Tk):
 
         tk.Button(frame, text="Add", command=add_calculator).pack(side="left", padx=10)
 
+        # Add Clear All Button
+        tk.Button(frame, text="Clear All Calculators", command=self.clear_all_calculators).pack(side="left", padx=10)
+
     def add_calculator_instance(self, calculator_class):
         """Add a new calculator instance to the dynamic page."""
-        self.calculator_count += 1
+        # Determine the next available calculator number
+        calculator_id = max(self.calculator_frames.keys(), default=0) + 1
+
+        # Create calculator frame
         calculator_frame = tk.Frame(self.scrollable_frame, relief="ridge", borderwidth=2)
         calculator_frame.pack(pady=10, fill="x", padx=20)
 
-        tk.Label(calculator_frame, text=f"Calculator {self.calculator_count}", font=("Arial", 14)).pack(pady=5)
+        # Create and pack calculator label
+        label = tk.Label(calculator_frame, text=f"Calculator {calculator_id}", font=("Arial", 14))
+        label.pack(pady=5)
 
         # Create the calculator instance
         calculator_instance = calculator_class(calculator_frame, self)
         calculator_instance.pack(fill="x")
 
-        # Add a new dropdown menu below this calculator
+        # Add a clear button for this calculator
+        clear_button = tk.Button(
+            calculator_frame,
+            text="Clear This Calculator",
+            command=lambda: self.clear_single_calculator(calculator_id)
+        )
+        clear_button.pack(pady=5)
+
+        # Create a new dropdown below this calculator
+        dropdown_frame = tk.Frame(self.scrollable_frame)
+        dropdown_frame.pack(pady=10, fill="x")
+        self.add_calculator_dropdown(dropdown_frame)
+
+        # Track the frame, label, and dropdown for this calculator
+        self.calculator_frames[calculator_id] = {
+            "frame": calculator_frame,
+            "dropdown": dropdown_frame,
+            "label": label
+        }
+
+
+
+    def clear_single_calculator(self, calculator_id):
+        """Remove a single calculator and its associated dropdown."""
+        if calculator_id in self.calculator_frames:
+            # Destroy the calculator frame
+            self.calculator_frames[calculator_id]["frame"].destroy()
+
+            # Destroy the associated dropdown frame
+            self.calculator_frames[calculator_id]["dropdown"].destroy()
+
+            # Remove the calculator from the tracking dictionary
+            del self.calculator_frames[calculator_id]
+
+
+
+    def clear_all_calculators(self):
+        """Remove all calculators and reset everything."""
+        # Iterate through all calculator frames and destroy their components
+        for calculator_data in self.calculator_frames.values():
+            calculator_data["frame"].destroy()
+            calculator_data["dropdown"].destroy()
+
+        # Reset all tracking variables
+        self.calculator_frames.clear()
+        self.calculator_count = 0
+
+        # Clear all existing dropdown menus and reinitialize the UI
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+
+        # Re-add the first dropdown menu
         self.add_calculator_dropdown(self.scrollable_frame)
+
+        self.scrollable_frame.update_idletasks()
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.canvas.yview_moveto(0)
+
+    def recalculate_calculator_numbers(self, starting_id):
+        """Recalculate calculator numbering starting from the given ID."""
+        sorted_ids = sorted(self.calculator_frames.keys())
+        
+        for new_id, old_id in enumerate(sorted_ids, start=starting_id):
+            frame_data = self.calculator_frames[old_id]
+            
+            # Update the label for the calculator
+            frame_data["label"].config(text=f"Calculator {new_id}")
+            
+            # Update the dictionary key
+            self.calculator_frames[new_id] = self.calculator_frames.pop(old_id)
+            
+        # Adjust the next calculator count
+        self.calculator_count = max(self.calculator_frames.keys(), default=0)
