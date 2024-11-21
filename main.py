@@ -1,8 +1,9 @@
 
-from mainwindow import CompressibleFlowApp
+
+from dynamicFlowCalculatorApp import DynamicFlowCalculatorApp
 
 def main():
-    app = CompressibleFlowApp()
+    app = DynamicFlowCalculatorApp()
     app.mainloop()
 
 if __name__ == "__main__":

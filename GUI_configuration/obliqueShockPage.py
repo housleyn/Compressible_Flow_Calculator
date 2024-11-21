@@ -1,84 +1,55 @@
 import tkinter as tk
-from tkinter import ttk
 import sys
 import os
-import math
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from Compressible_flow_equations.oblique_shocks import ObliqueShock
 
 
-class ObliqueShocksPage(tk.Frame):
-    """Page for oblique shocks calculations."""
-    def __init__(self, parent, controller):
+class ObliqueShockPage(tk.Frame):
+    """Standalone page for Oblique Shock Calculations."""
+
+    def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
 
-        # Title
-        tk.Label(self, text="Oblique Shocks Calculations", font=("Arial", 16)).pack(pady=20)
+        tk.Label(self, text="Oblique Shock Calculations", font=("Arial", 16)).pack(pady=20)
 
-        # Input Frame
         input_frame = tk.Frame(self)
         input_frame.pack(pady=10)
 
-        # Gamma Input
-        tk.Label(input_frame, text="Gamma:").grid(row=0, column=0, padx=5, pady=5)
+        tk.Label(input_frame, text="Gamma (γ):").grid(row=0, column=0, padx=5, pady=5)
         gamma_entry = tk.Entry(input_frame)
-        gamma_entry.insert(0, "1.4")  # Default value
         gamma_entry.grid(row=0, column=1, padx=5, pady=5)
 
-        # Mach Number Input
-        tk.Label(input_frame, text="Mach Number 1:").grid(row=1, column=0, padx=5, pady=5)
+        tk.Label(input_frame, text="Mach Number (M):").grid(row=1, column=0, padx=5, pady=5)
         mach_entry = tk.Entry(input_frame)
         mach_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        # Angle Input with Unit Dropdown
-        
-        input_frame_angle = tk.Frame(input_frame)
-        input_frame_angle.grid(row=2, column=1, padx=5, pady=5)
+        tk.Label(input_frame, text="Shock Angle (θ in degrees):").grid(row=2, column=0, padx=5, pady=5)
+        theta_entry = tk.Entry(input_frame)
+        theta_entry.grid(row=2, column=1, padx=5, pady=5)
 
-        # Calculation Type Dropdown
-        calc_type_var = tk.StringVar(value="Turn angle (weak shock)")
-        calc_type_dropdown = ttk.Combobox(input_frame, textvariable=calc_type_var, state="readonly")
-        calc_type_dropdown['values'] = [
-            "Turn angle (weak shock)",
-            "Turn angle (strong shock)",
-            "Wave angle",
-            "M1n"
-        ]
-        calc_type_dropdown.grid(row=2, column=0, padx=5, pady=5)
-        angle_entry = tk.Entry(input_frame_angle)  # Entry field for the angle value
-        angle_entry.pack(side=tk.LEFT, padx=5)
+        result_text = tk.Text(self, height=10, width=50)
+        result_text.pack(pady=10)
 
-        # Output
-        output_frame = tk.Frame(self)
-        output_frame.pack(pady=10)
-        output_var = tk.StringVar(value="Results will be displayed here")
-        output_label = tk.Label(output_frame, textvariable=output_var, fg="blue", font=("Arial", 12), wraplength=400, justify="left")
-        output_label.pack()
-
-        # Calculate Button
         def calculate():
             try:
                 gamma = float(gamma_entry.get())
                 mach = float(mach_entry.get())
-                angle = float(angle_entry.get())
-                calc_type = calc_type_var.get()
+                theta = float(theta_entry.get())
 
+                flow = ObliqueShock(gamma)
+                result = flow.calculate(mach, theta)
 
-                # Perform calculation
-                shock = ObliqueShock(gamma)
-                results = shock.calculate(calc_type, mach, angle)
-
-                # Format and display results
-                result_text = "\n".join([f"{key}: {value}" for key, value in results.items()])
-                output_var.set(result_text)
+                result_text.delete(1.0, tk.END)
+                result_text.insert(tk.END, f"Gamma (γ): {gamma}\n")
+                result_text.insert(tk.END, f"Mach Number: {mach}\n")
+                result_text.insert(tk.END, f"Shock Angle (θ): {theta}\n\n")
+                result_text.insert(tk.END, f"Pressure Ratio (p2/p1): {result.p2_p1}\n")
+                result_text.insert(tk.END, f"Density Ratio (rho2/rho1): {result.rho2_rho1}\n")
+                result_text.insert(tk.END, f"Temperature Ratio (T2/T1): {result.T2_T1}\n")
             except ValueError as e:
-                output_var.set(f"Error: {str(e)}")
-            except Exception as e:
-                output_var.set(f"Unexpected error: {str(e)}")
+                result_text.delete(1.0, tk.END)
+                result_text.insert(tk.END, f"Error: {str(e)}\n")
 
         tk.Button(self, text="Calculate", command=calculate).pack(pady=10)
-
-        # Back to Home Button
-        tk.Button(self, text="Back to Home",
-                  command=lambda: controller.show_frame("HomePage")).pack(pady=20)

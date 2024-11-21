@@ -2,12 +2,12 @@ import tkinter as tk
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from Compressible_flow_equations import isentropic_flow
-from isentropic_flow import isentropicFlow
+from Compressible_flow_equations.isentropic_flow import isentropicFlow
 
 class IsentropicFlowPage(tk.Frame):
-    """Page for isentropic flow calculations."""
-    def __init__(self, parent, controller):
+    """Standalone page for Isentropic Flow Calculations."""
+    
+    def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
 
@@ -77,7 +77,3 @@ class IsentropicFlowPage(tk.Frame):
 
         # Add Calculate Button
         tk.Button(self, text="Calculate", command=calculate).pack(pady=10)
-
-        # Back to Home Button
-        tk.Button(self, text="Back to Home",
-                  command=lambda: controller.show_frame("HomePage")).pack(pady=20)

@@ -8,7 +8,7 @@ from Compressible_flow_equations.shock_tube import ShockTube
 
 class ShockTubePage(tk.Frame):
     """Page for Shock Tube calculations."""
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
 
