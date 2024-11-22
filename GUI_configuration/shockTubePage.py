@@ -1,107 +1,172 @@
 import tkinter as tk
+from tkinter import ttk
 import sys
 import os
-from tabulate import tabulate
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from Compressible_flow_equations.shock_tube import ShockTube
 
+
 class ShockTubePage(tk.Frame):
     """Page for Shock Tube calculations."""
+
     def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
 
+        # Scrollable Frame for the entire page
+        outer_frame = tk.Frame(self)
+        outer_frame.pack(fill="both", expand=True)
+        canvas = tk.Canvas(outer_frame)
+        scrollbar = ttk.Scrollbar(outer_frame, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+
+        scrollable_frame.bind(
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Bind Mouse Wheel Scrolling for the page
+        def on_mouse_wheel(event):
+            canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+        canvas.bind_all("<MouseWheel>", on_mouse_wheel)
+
         # Title
-        tk.Label(self, text="Shock Tube Calculations", font=("Arial", 16)).pack(pady=20)
+        tk.Label(scrollable_frame, text="Shock Tube Calculations", font=("Arial", 16, "bold")).pack(pady=10)
 
-        # Input Frame
-        input_frame = tk.Frame(self)
-        input_frame.pack(pady=10)
+        # Input Section
+        input_frame = tk.LabelFrame(scrollable_frame, text="Inputs", font=("Arial", 14, "bold"), padx=10, pady=10)
+        input_frame.pack(padx=100, pady=10, fill="x")
 
-        # Input Fields
+        # Input Fields with Units
         inputs = [
-            ("Gamma (Region 1)", ""),  # Default value for gamma1
-            ("Gamma (Region 4)", ""),  # Default value for gamma4
-            ("Gas Constant R (Region 1)", ""),  # Default value for R1
-            ("Gas Constant R (Region 4)", ""),  # Default value for R4
-            ("Driven Temperature (T1)", ""),  # Default value for T1
-            ("Driver Temperature (T4)", ""),  # Default value for T4
-            ("Driven Gage Pressure (p1gage)", ""),  # Default value for p1gage
-            ("Driver Gage Pressure (p4gage)", ""),  # Default value for p4gage
-            ("Atmospheric Pressure (patm)", ""),  # Default value for patm
+            ("Gamma (Region 1)", "1.4", ""),
+            ("Gamma (Region 4)", "1.4", ""),
+            ("Gas Constant R (Region 1)", "287", "J/(kg·K)"),
+            ("Gas Constant R (Region 4)", "287", "J/(kg·K)"),
+            ("Driven Temperature (T1)", "289.6", "K"),
+            ("Driver Temperature (T4)", "295.8", "K"),
+            ("Driven Gage Pressure (p1gage)", "-80503.21", "Pa"),
+            ("Driver Gage Pressure (p4gage)", "191726.18", "Pa"),
+            ("Atmospheric Pressure (patm)", "86386.78", "Pa"),
         ]
-
         self.entries = {}
-        for i, (label_text, default) in enumerate(inputs):
-            tk.Label(input_frame, text=label_text).grid(row=i, column=0, padx=5, pady=5, sticky="w")
-            entry = tk.Entry(input_frame)
+        for i, (label_text, default, unit) in enumerate(inputs):
+            tk.Label(input_frame, text=label_text, font=("Arial", 12)).grid(row=i, column=0, padx=5, pady=5, sticky="e")
+            entry = ttk.Entry(input_frame, font=("Arial", 12))
             entry.insert(0, default)
-            entry.grid(row=i, column=1, padx=5, pady=5)
+            entry.grid(row=i, column=1, padx=5, pady=5, sticky="w")
             self.entries[label_text] = entry
+            if unit:
+                tk.Label(input_frame, text=unit, font=("Arial", 12)).grid(row=i, column=2, padx=5, pady=5, sticky="w")
 
-        # Output Frame
-        output_frame = tk.Frame(self)
-        output_frame.pack(pady=20)
-        self.output_var = tk.StringVar(value="Results will be displayed here.")
-        output_label = tk.Label(output_frame, textvariable=self.output_var, font=("Arial", 12), fg="blue", wraplength=600, justify="left")
-        output_label.pack()
+        # Calculate Button Inside Input Frame
+        ttk.Button(input_frame, text="Calculate", command=self.calculate).grid(row=len(inputs), column=0, columnspan=3, pady=10)
 
-        # Calculate Button
-        def calculate():
-            try:
-                # Retrieve inputs
-                gamma1 = float(self.entries["Gamma (Region 1)"].get())
-                gamma4 = float(self.entries["Gamma (Region 4)"].get())
-                R1 = float(self.entries["Gas Constant R (Region 1)"].get())
-                R4 = float(self.entries["Gas Constant R (Region 4)"].get())
-                T1 = float(self.entries["Driven Temperature (T1)"].get())
-                T4 = float(self.entries["Driver Temperature (T4)"].get())
-                p1gage = float(self.entries["Driven Gage Pressure (p1gage)"].get())
-                p4gage = float(self.entries["Driver Gage Pressure (p4gage)"].get())
-                patm = float(self.entries["Atmospheric Pressure (patm)"].get())
+        # Results Section
+        result_frame = tk.LabelFrame(scrollable_frame, text="Results", font=("Arial", 14, "bold"), padx=10, pady=10)
+        result_frame.pack(padx=100, pady=10, fill="both", expand=True)
 
-                # Perform calculations
-                shock_tube = ShockTube(gamma1, gamma4, R1, R4, T1, T4, p1gage, p4gage, patm)
-                results = shock_tube.run_calculations()
+        # Treeview with Scrollbar
+        result_table_frame = tk.Frame(result_frame)
+        result_table_frame.pack(fill="both", expand=True)
 
-                
-                formatted_table = format_results_as_table(results)
-                self.output_var.set(formatted_table)
+        columns = ("Property", "Value", "Unit")
+        self.result_table = ttk.Treeview(result_table_frame, columns=columns, show="headings", height=15)
+        self.result_table.pack(side="left", fill="both", expand=True)
 
-                
-            except Exception as e:
-                self.output_var.set(f"Error: {e}")
+        # Vertical Scrollbar for Treeview
+        table_scrollbar = ttk.Scrollbar(result_table_frame, orient="vertical", command=self.result_table.yview)
+        self.result_table.configure(yscroll=table_scrollbar.set)
+        table_scrollbar.pack(side="right", fill="y")
 
-        tk.Button(self, text="Calculate", command=calculate).pack(pady=10)
+        for col in columns:
+            self.result_table.heading(col, text=col)
+            self.result_table.column(col, anchor="center", width=200)
 
-        # Back to Home Button
-        tk.Button(self, text="Back to Home", command=lambda: controller.show_frame("HomePage")).pack(pady=10)
+        # Alternating Row Colors
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 12), rowheight=25)
+        style.configure("Treeview.Heading", font=("Arial", 14, "bold"), background="#d9d9d9", relief="solid")
+        style.map("Treeview", background=[("selected", "#fffbcc")], foreground=[("selected", "black")], font=[("selected", ("Arial", 12, "bold"))])
+        self.result_table.tag_configure("odd", background="white")
+        self.result_table.tag_configure("even", background="#f2f2f2")
 
 
-def format_results_as_table(results):
-    # Zone properties table
-    zone_headers = ["Zone", "T (K)", "P (Pa)", "Rho (kg/m³)", "V (m/s)"]
-    zone_data = [
-        ["1", f"{results['T1']:.2f}", f"{results['p1']:.2f}", f"{results['rho1']:.2f}", f"{results['v1']:.2f}"],
-        ["2", f"{results['T2']:.2f}", f"{results['p2']:.2f}", f"{results['rho2']:.2f}", f"{results['v2']:.2f}"],
-        ["3", f"{results['T3']:.2f}", f"{results['p3']:.2f}", f"{results['rho3']:.2f}", f"{results['v3']:.2f}"],
-        ["4", f"{results['T4']:.2f}", f"{results['p4']:.2f}", f"{results['rho4']:.2f}", f"{results['v4']:.2f}"],
-        ["5", f"{results['T5']:.2f}", f"{results['p5']:.2f}", f"{results['rho5']:.2f}", f"{results['v5']:.2f}"],
-    ]
-    zone_table = tabulate(zone_data, headers=zone_headers, tablefmt="grid")
+        # Add the "Copy Value" button under the results table
+        ttk.Button(result_frame, text="Copy Selected Value", command=self.copy_selected_value).pack(pady=10)
 
-    # Key properties table
-    key_headers = ["Property", "Value"]
-    key_data = [
-        ["Incident Shock Speed (Si)", f"{results['Si']:.2f} m/s"],
-        ["Reflected Shock Speed (Sr)", f"{results['Sr']:.2f} m/s"],
-        ["Incident Mach Number (Mi)", f"{results['Mi']:.2f}"],
-        ["Reflected Mach Number (Mr)", f"{results['Mr']:.2f}"],
-        ["Control Surface Velocity (Vel_CS)", f"{results['v_CS']:.2f} m/s"],
-        ["Expansion Wave Velocity (Vel_EW)", f"{results['v_EW']:.2f} m/s"],
-    ]
-    key_table = tabulate(key_data, headers=key_headers, tablefmt="grid")
+    def calculate(self):
+        """Perform calculations and display results."""
+        try:
+            # Retrieve inputs
+            gamma1 = float(self.entries["Gamma (Region 1)"].get())
+            gamma4 = float(self.entries["Gamma (Region 4)"].get())
+            R1 = float(self.entries["Gas Constant R (Region 1)"].get())
+            R4 = float(self.entries["Gas Constant R (Region 4)"].get())
+            T1 = float(self.entries["Driven Temperature (T1)"].get())
+            T4 = float(self.entries["Driver Temperature (T4)"].get())
+            p1gage = float(self.entries["Driven Gage Pressure (p1gage)"].get())
+            p4gage = float(self.entries["Driver Gage Pressure (p4gage)"].get())
+            patm = float(self.entries["Atmospheric Pressure (patm)"].get())
 
-    # Combine both tables
-    formatted_output = f"Zone Properties:\n{zone_table}\n\nKey Properties:\n{key_table}"
-    return formatted_output
+            # Perform calculations
+            shock_tube = ShockTube(gamma1, gamma4, R1, R4, T1, T4, p1gage, p4gage, patm)
+            results = shock_tube.run_calculations()
+
+            # Clear previous results
+            for row in self.result_table.get_children():
+                self.result_table.delete(row)
+
+            # Insert new results
+            properties = [
+                # Region-specific properties
+                ("T1", results["T1"], "K"),
+                ("p1", results["p1"], "Pa"),
+                ("rho1", results["rho1"], "kg/m³"),
+                ("v1", results["v1"], "m/s"),
+                ("a1", results["a1"], "m/s" ),
+                ("T2", results["T2"], "K"),
+                ("p2", results["p2"], "Pa"),
+                ("rho2", results["rho2"], "kg/m³"),
+                ("v2", results["v2"], "m/s"),
+                ("a2", results["a2"], "m/s" ),
+                ("T3", results["T3"], "K"),
+                ("p3", results["p3"], "Pa"),
+                ("rho3", results["rho3"], "kg/m³"),
+                ("v3", results["v3"], "m/s"),
+                ("a3", results["a3"], "m/s" ),
+                ("T4", results["T4"], "K"),
+                ("p4", results["p4"], "Pa"),
+                ("rho4", results["rho4"], "kg/m³"),
+                ("v4", results["v4"], "m/s"),
+                ("a4", results["a4"], "m/s" ),
+                ("T5", results["T5"], "K"),
+                ("p5", results["p5"], "Pa"),
+                ("rho5", results["rho5"], "kg/m³"),
+                ("v5", results["v5"], "m/s"),
+                ("a5", results["a5"], "m/s" ),
+                # Key properties
+                ("Si", results["Si"], "m/s"),
+                ("Mi", results["Mi"], ""),
+                ("Sr", results["Sr"], "m/s"),
+                ("Mr", results["Mr"], ""),
+                ("V_CS", results["v_CS"], "m/s"),
+                ("V_EW", results["v_EW"], "m/s"),
+            ]
+            for i, (prop, val, unit) in enumerate(properties):
+                tag = "odd" if i % 2 == 0 else "even"
+                self.result_table.insert("", "end", values=(prop, f"{val:.2f}", unit), tags=(tag,))
+        except Exception as e:
+            self.result_table.insert("", "end", values=("Error", str(e), ""))
+
+    def copy_selected_value(self):
+        """Copy the selected value from the table to the clipboard."""
+        selected_item = self.result_table.selection()  # Get selected row
+        if selected_item:
+            value = self.result_table.item(selected_item, "values")[1]  # Get 'Value' column
+            self.clipboard_clear()
+            self.clipboard_append(value)
+            self.update()  # Update clipboard

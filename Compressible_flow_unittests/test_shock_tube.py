@@ -15,8 +15,8 @@ def shock_tube():
         gamma4=1.4,
         R1=287,
         R4=287,
-        T1=295.8,
-        T4=289.6,
+        T1=289.6,
+        T4=295.8,
         p1gage=-80503.21,
         p4gage=191726.18,
         patm = 86386.78
@@ -80,11 +80,11 @@ def test_rho_zone_values(shock_tube):
     Test calculation of density in each zone.
     """
     results = shock_tube.run_calculations()
-    assert pytest.approx(results["rho1"], 0.01) == 0.06930440805422253  
-    assert pytest.approx(results["rho2"], 0.01) == 0.19534061607497777 
+    assert pytest.approx(results["rho1"], 0.01) == 0.0707881350222341  
+    assert pytest.approx(results["rho2"], 0.01) == 0.20142250795605757 
     assert pytest.approx(results["rho3"], 0.01) == 0.67  
-    assert pytest.approx(results["rho4"], 0.01) == 3.3461147900744987  
-    assert pytest.approx(results["rho5"], 0.01) == 0.45583750308860005
+    assert pytest.approx(results["rho4"], 0.01) == 3.2759793909153228  
+    assert pytest.approx(results["rho5"], 0.01) == 0.47292537554855535
 
 def test_velocity_zone_values(shock_tube):
     """
