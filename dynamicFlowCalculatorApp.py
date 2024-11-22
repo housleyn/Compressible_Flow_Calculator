@@ -17,7 +17,7 @@ class DynamicFlowCalculatorApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Dynamic Flow Calculator with Tabs")
-        self.geometry("1200x800")  # Adjusted for space to accommodate both sections
+        self.geometry("1300x800")  # Adjusted for space to accommodate both sections
 
         # Main container to split left (calculators) and right (scratchpad)
         main_frame = tk.Frame(self)
@@ -37,6 +37,10 @@ class DynamicFlowCalculatorApp(tk.Tk):
         self.init_dynamic_calculator_tab()
 
         # Add the shock tube page tab
+        style = ttk.Style()
+        style.configure("TNotebook", background="#d9d9d9", borderwidth=0)
+        style.configure("TNotebook.Tab", font=("Arial", 12, "bold"), padding=[10, 5], background="#f0f0f0")
+        style.map("TNotebook.Tab", background=[("selected", "#c1c1c1")], foreground=[("selected", "black")])
         self.shock_tube_tab = ShockTubePage(self.notebook)
         self.notebook.add(self.shock_tube_tab, text="Shock Tube")
 
@@ -45,10 +49,20 @@ class DynamicFlowCalculatorApp(tk.Tk):
         self.notebook.add(self.supersonic_airfoil_tab, text="Supersonic Airfoil")
 
         # Right frame for scratchpad
-        right_frame = tk.Frame(main_frame, width=400, relief="solid", borderwidth=1, padx=10, pady=10)
+        right_frame = tk.Frame(main_frame, width=400, relief="ridge", borderwidth=2, bg="#f5f5f5", padx=10, pady=10)
         right_frame.pack(side="right", fill="y")
 
-        tk.Label(right_frame, text="Python Scratchpad", font=("Arial", 16, "bold")).pack(pady=10)
+        tk.Label(right_frame, text="Python Scratchpad", font=("Arial", 16, "bold"), bg="#f5f5f5").pack(pady=10)
+
+        self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2, bg="#ffffff")
+        self.code_input.pack(padx=5, pady=5, fill="both", expand=True)
+
+        ttk.Button(right_frame, text="Execute Code", command=self.execute_code).pack(pady=5)
+
+        self.output_area = tk.Text(
+            right_frame, height=10, width=40, font=("Courier New", 12), bg="#f0f0f0", relief="sunken", bd=2, state="disabled"
+        )
+        self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
 
         # Code input (scratchpad)
         self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2)
@@ -73,14 +87,16 @@ class DynamicFlowCalculatorApp(tk.Tk):
 
         self.canvas = tk.Canvas(container)
         scrollbar = tk.Scrollbar(container, orient="vertical", command=self.canvas.yview)
-        scrollable_frame = tk.Frame(self.canvas)
 
+        # Create an inner frame directly as part of the canvas
+        scrollable_frame = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="n")  # Anchor widgets at "n" (center top)
+
+        # Configure the canvas and scrollbar
         scrollable_frame.bind(
             "<Configure>",
             lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
-
-        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=scrollbar.set)
 
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -99,6 +115,8 @@ class DynamicFlowCalculatorApp(tk.Tk):
         # Start with the first dropdown menu
         self.add_calculator_dropdown(scrollable_frame)
 
+
+
     def bind_mouse_wheel(self, canvas):
         """Bind mouse wheel events to scroll the canvas."""
         def on_mouse_wheel(event):
@@ -113,7 +131,7 @@ class DynamicFlowCalculatorApp(tk.Tk):
     def add_calculator_dropdown(self, parent):
         """Create a dropdown menu to choose and add calculators."""
         frame = tk.Frame(parent)
-        frame.pack(pady=10, fill="x")
+        frame.pack(pady=10, padx=100, fill="x")
 
         tk.Label(frame, text="Choose Calculator Type:", font=("Arial", 14)).pack(side="left", padx=10)
 
@@ -144,9 +162,9 @@ class DynamicFlowCalculatorApp(tk.Tk):
         # Determine the next available calculator number
         calculator_id = max(self.calculator_frames.keys(), default=0) + 1
 
-        # Create calculator frame
+        # Create calculator frame with extra horizontal padding
         calculator_frame = tk.Frame(self.scrollable_frame, relief="ridge", borderwidth=2)
-        calculator_frame.pack(pady=10, fill="x", padx=20)
+        calculator_frame.pack(pady=10, padx=200, fill="x")  # Add horizontal padding here
 
         # Create and pack calculator label
         label = tk.Label(calculator_frame, text=f"Calculator {calculator_id}", font=("Arial", 14))
@@ -175,6 +193,7 @@ class DynamicFlowCalculatorApp(tk.Tk):
             "dropdown": dropdown_frame,
             "label": label
         }
+
 
 
 
