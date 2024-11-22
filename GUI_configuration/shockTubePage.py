@@ -115,17 +115,18 @@ class ShockTubePage(tk.Frame):
     def bind_mouse_wheel(self, canvas):
         """Bind mouse wheel events to scroll the canvas."""
         def on_mouse_wheel(event):
-            canvas.yview_scroll(-1 * int(event.delta / 120), "units")  # For Windows
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")  # For Windows and MacOS
         def on_mouse_wheel_linux(event):
             canvas.yview_scroll(-1 if event.num == 4 else 1, "units")  # For Linux systems
 
-        self.bind("<Enter>", lambda _: self.bind_all("<MouseWheel>", on_mouse_wheel))
-        self.bind("<Enter>", lambda _: self.bind_all("<Button-4>", on_mouse_wheel_linux))
-        self.bind("<Enter>", lambda _: self.bind_all("<Button-5>", on_mouse_wheel_linux))
+        # Bind events only when the cursor is over the canvas
+        canvas.bind("<MouseWheel>", on_mouse_wheel)
+        
 
-        # self.bind("<Leave>", lambda _: self.bind_all("<MouseWheel>"))
-        # self.bind("<Leave>", lambda _: self.bind_all("<Button-4>"))
-        # self.bind("<Leave>", lambda _: self.bind_all("<Button-5>"))
+        # For Linux (bind mouse buttons 4 and 5)
+        canvas.bind( "<Button-4>", on_mouse_wheel_linux)
+        canvas.bind( "<Button-5>", on_mouse_wheel_linux)
+      
 
     def calculate(self):
         """Perform calculations and display results."""

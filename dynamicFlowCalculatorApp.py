@@ -64,20 +64,6 @@ class DynamicFlowCalculatorApp(tk.Tk):
         )
         self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
 
-        # Code input (scratchpad)
-        # self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2)
-        # self.code_input.pack(padx=5, pady=5, fill="both", expand=True)
-
-        # Execute Button
-        # execute_button = ttk.Button(right_frame, text="Execute Code", command=self.execute_code)
-        # execute_button.pack(pady=5)
-
-        # Output Area
-        # self.output_area = tk.Text(
-        #     right_frame, height=10, width=40, font=("Courier New", 12), bg="#f5f5f5", relief="sunken", bd=2, state="disabled"
-        # )
-        # self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
-
 
     def init_dynamic_calculator_tab(self):
         """Initialize the dynamic calculator tab."""
