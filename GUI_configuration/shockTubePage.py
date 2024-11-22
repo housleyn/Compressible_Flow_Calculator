@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 import sys
 import os
+import numpy as np
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from Compressible_flow_equations.shock_tube import ShockTube
 
@@ -27,11 +30,10 @@ class ShockTubePage(tk.Frame):
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
+        
+         # Bind mouse wheel events for this canvas only
+        self.bind_mouse_wheel(canvas)
 
-        # Bind Mouse Wheel Scrolling for the page
-        def on_mouse_wheel(event):
-            canvas.yview_scroll(-1 * int(event.delta / 120), "units")
-        canvas.bind_all("<MouseWheel>", on_mouse_wheel)
 
         # Title
         tk.Label(scrollable_frame, text="Shock Tube Calculations", font=("Arial", 16, "bold")).pack(pady=10)
@@ -51,6 +53,8 @@ class ShockTubePage(tk.Frame):
             ("Driven Gage Pressure (p1gage)", "-80503.21", "Pa"),
             ("Driver Gage Pressure (p4gage)", "191726.18", "Pa"),
             ("Atmospheric Pressure (patm)", "86386.78", "Pa"),
+            ("Driver Length", "3.1", "m"),
+            ("Driven Length", "11.67", "m"),
         ]
         self.entries = {}
         for i, (label_text, default, unit) in enumerate(inputs):
@@ -68,6 +72,15 @@ class ShockTubePage(tk.Frame):
         # Results Section
         result_frame = tk.LabelFrame(scrollable_frame, text="Results", font=("Arial", 14, "bold"), padx=10, pady=10)
         result_frame.pack(padx=100, pady=10, fill="both", expand=True)
+
+        # Plot Section
+        plot_frame = tk.LabelFrame(scrollable_frame, text="Shock Tube Diagram", font=("Arial", 14, "bold"), padx=10, pady=10)
+        plot_frame.pack(padx=20, pady=10, fill="both", expand=True)
+
+         # Matplotlib Figure
+        self.figure, self.ax = plt.subplots(figsize=(6, 6))
+        self.canvas = FigureCanvasTkAgg(self.figure, master=plot_frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
 
         # Treeview with Scrollbar
         result_table_frame = tk.Frame(result_frame)
@@ -97,6 +110,22 @@ class ShockTubePage(tk.Frame):
 
         # Add the "Copy Value" button under the results table
         ttk.Button(result_frame, text="Copy Selected Value", command=self.copy_selected_value).pack(pady=10)
+        
+
+    def bind_mouse_wheel(self, canvas):
+        """Bind mouse wheel events to scroll the canvas."""
+        def on_mouse_wheel(event):
+            canvas.yview_scroll(-1 * int(event.delta / 120), "units")  # For Windows
+        def on_mouse_wheel_linux(event):
+            canvas.yview_scroll(-1 if event.num == 4 else 1, "units")  # For Linux systems
+
+        self.bind("<Enter>", lambda _: self.bind_all("<MouseWheel>", on_mouse_wheel))
+        self.bind("<Enter>", lambda _: self.bind_all("<Button-4>", on_mouse_wheel_linux))
+        self.bind("<Enter>", lambda _: self.bind_all("<Button-5>", on_mouse_wheel_linux))
+
+        # self.bind("<Leave>", lambda _: self.bind_all("<MouseWheel>"))
+        # self.bind("<Leave>", lambda _: self.bind_all("<Button-4>"))
+        # self.bind("<Leave>", lambda _: self.bind_all("<Button-5>"))
 
     def calculate(self):
         """Perform calculations and display results."""
@@ -111,6 +140,8 @@ class ShockTubePage(tk.Frame):
             p1gage = float(self.entries["Driven Gage Pressure (p1gage)"].get())
             p4gage = float(self.entries["Driver Gage Pressure (p4gage)"].get())
             patm = float(self.entries["Atmospheric Pressure (patm)"].get())
+            driver_length = float(self.entries["Driver Length"].get())
+            driven_length = float(self.entries["Driven Length"].get())
 
             # Perform calculations
             shock_tube = ShockTube(gamma1, gamma4, R1, R4, T1, T4, p1gage, p4gage, patm)
@@ -159,6 +190,34 @@ class ShockTubePage(tk.Frame):
             for i, (prop, val, unit) in enumerate(properties):
                 tag = "odd" if i % 2 == 0 else "even"
                 self.result_table.insert("", "end", values=(prop, f"{val:.2f}", unit), tags=(tag,))
+                        # Define Coordinates
+            xS = [0.001, driven_length]
+            tS = [0.001, driven_length / results["Si"]]
+
+            xSR = [driven_length, driven_length - driver_length/2]
+            tSR = [tS[1], tS[1] + driven_length*.25 / results["Sr"]]
+
+            xCS = [0.001, driven_length]
+            tCS = [0.001, xCS[1] / results["v2"]]
+
+
+            # Plot
+            self.ax.clear()
+            self.ax.plot(xS, tS, 'r+-', label="Normal Shock Incident")
+            self.ax.plot(xSR, tSR, 'b+-', label="Normal Shock Reflected")
+            self.ax.plot(xCS, tCS, 'k+-', label="Contact Surface")
+
+            # Labels, Legend, and Grid
+            self.ax.set_xlabel("x (m)", fontsize=12, fontweight="bold")
+            self.ax.set_ylabel("t (s)", fontsize=12, fontweight="bold")
+            self.ax.legend()
+            self.ax.grid(True)
+
+            
+
+            # Update the Canvas
+            self.canvas.draw()
+
         except Exception as e:
             self.result_table.insert("", "end", values=("Error", str(e), ""))
 
@@ -170,3 +229,4 @@ class ShockTubePage(tk.Frame):
             self.clipboard_clear()
             self.clipboard_append(value)
             self.update()  # Update clipboard
+    

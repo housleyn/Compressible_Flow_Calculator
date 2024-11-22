@@ -65,18 +65,18 @@ class DynamicFlowCalculatorApp(tk.Tk):
         self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
 
         # Code input (scratchpad)
-        self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2)
-        self.code_input.pack(padx=5, pady=5, fill="both", expand=True)
+        # self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2)
+        # self.code_input.pack(padx=5, pady=5, fill="both", expand=True)
 
         # Execute Button
-        execute_button = ttk.Button(right_frame, text="Execute Code", command=self.execute_code)
-        execute_button.pack(pady=5)
+        # execute_button = ttk.Button(right_frame, text="Execute Code", command=self.execute_code)
+        # execute_button.pack(pady=5)
 
         # Output Area
-        self.output_area = tk.Text(
-            right_frame, height=10, width=40, font=("Courier New", 12), bg="#f5f5f5", relief="sunken", bd=2, state="disabled"
-        )
-        self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
+        # self.output_area = tk.Text(
+        #     right_frame, height=10, width=40, font=("Courier New", 12), bg="#f5f5f5", relief="sunken", bd=2, state="disabled"
+        # )
+        # self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
 
 
     def init_dynamic_calculator_tab(self):
@@ -87,16 +87,17 @@ class DynamicFlowCalculatorApp(tk.Tk):
 
         self.canvas = tk.Canvas(container)
         scrollbar = tk.Scrollbar(container, orient="vertical", command=self.canvas.yview)
+        scrollable_frame = tk.Frame(self.canvas)
 
         # Create an inner frame directly as part of the canvas
-        scrollable_frame = tk.Frame(self.canvas)
-        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="n")  # Anchor widgets at "n" (center top)
-
-        # Configure the canvas and scrollbar
         scrollable_frame.bind(
             "<Configure>",
             lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
+        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="n")  # Anchor widgets at "n" (center top)
+
+        # Configure the canvas and scrollbar
+       
         self.canvas.configure(yscrollcommand=scrollbar.set)
 
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -104,6 +105,7 @@ class DynamicFlowCalculatorApp(tk.Tk):
 
         # Enable mouse wheel scrolling
         self.bind_mouse_wheel(self.canvas)
+        
 
         # Track the number of calculators dynamically
         self.calculator_count = 0
@@ -127,6 +129,7 @@ class DynamicFlowCalculatorApp(tk.Tk):
         self.bind_all("<MouseWheel>", on_mouse_wheel)
         self.bind_all("<Button-4>", on_mouse_wheel_linux)
         self.bind_all("<Button-5>", on_mouse_wheel_linux)
+
 
     def add_calculator_dropdown(self, parent):
         """Create a dropdown menu to choose and add calculators."""
