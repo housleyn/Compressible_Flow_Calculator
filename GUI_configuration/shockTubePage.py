@@ -191,7 +191,6 @@ class ShockTubePage(tk.Frame):
             for i, (prop, val, unit) in enumerate(properties):
                 tag = "odd" if i % 2 == 0 else "even"
                 self.result_table.insert("", "end", values=(prop, f"{val:.2f}", unit), tags=(tag,))
-                        # Define Coordinates
             xS = [0.001, driven_length]
             tS = [0.001, driven_length / results["Si"]]
 
