@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import sys 
+import io
 from GUI_configuration.IsentropicFlowPage import IsentropicFlowPage
 from GUI_configuration.NormalShockPage import NormalShockPage
 from GUI_configuration.obliqueShockPage import ObliqueShockPage
@@ -15,10 +17,18 @@ class DynamicFlowCalculatorApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Dynamic Flow Calculator with Tabs")
-        self.geometry("800x600")
+        self.geometry("1200x800")  # Adjusted for space to accommodate both sections
 
-        # Create the Notebook (tabs)
-        self.notebook = ttk.Notebook(self)
+        # Main container to split left (calculators) and right (scratchpad)
+        main_frame = tk.Frame(self)
+        main_frame.pack(fill="both", expand=True)
+
+        # Left frame for calculators (notebook)
+        left_frame = tk.Frame(main_frame, width=800)  # Width is adjustable
+        left_frame.pack(side="left", fill="both", expand=True)
+
+        # Notebook (calculators)
+        self.notebook = ttk.Notebook(left_frame)
         self.notebook.pack(fill="both", expand=True)
 
         # Add the dynamic flow calculator tab
@@ -34,7 +44,26 @@ class DynamicFlowCalculatorApp(tk.Tk):
         self.supersonic_airfoil_tab = SupersonicAirfoilPage(self.notebook)
         self.notebook.add(self.supersonic_airfoil_tab, text="Supersonic Airfoil")
 
-        # Future tabs can be added here as needed
+        # Right frame for scratchpad
+        right_frame = tk.Frame(main_frame, width=400, relief="solid", borderwidth=1, padx=10, pady=10)
+        right_frame.pack(side="right", fill="y")
+
+        tk.Label(right_frame, text="Python Scratchpad", font=("Arial", 16, "bold")).pack(pady=10)
+
+        # Code input (scratchpad)
+        self.code_input = tk.Text(right_frame, height=20, width=40, font=("Courier New", 12), relief="sunken", bd=2)
+        self.code_input.pack(padx=5, pady=5, fill="both", expand=True)
+
+        # Execute Button
+        execute_button = ttk.Button(right_frame, text="Execute Code", command=self.execute_code)
+        execute_button.pack(pady=5)
+
+        # Output Area
+        self.output_area = tk.Text(
+            right_frame, height=10, width=40, font=("Courier New", 12), bg="#f5f5f5", relief="sunken", bd=2, state="disabled"
+        )
+        self.output_area.pack(padx=5, pady=5, fill="both", expand=True)
+
 
     def init_dynamic_calculator_tab(self):
         """Initialize the dynamic calculator tab."""
@@ -200,3 +229,29 @@ class DynamicFlowCalculatorApp(tk.Tk):
             
         # Adjust the next calculator count
         self.calculator_count = max(self.calculator_frames.keys(), default=0)
+    def execute_code(self):
+        """Execute the Python code written in the scratchpad and display the output."""
+        code = self.code_input.get("1.0", tk.END).strip()  # Get the code from the Text widget
+        self.output_area.config(state="normal")  # Enable editing in the output area
+        self.output_area.delete("1.0", tk.END)  # Clear previous output
+
+        # Redirect stdout to capture print statements
+        output_stream = io.StringIO()
+        sys.stdout = output_stream
+
+        try:
+            exec_globals = {}  # Global execution context
+            exec(code, exec_globals)  # Execute the code
+            output = output_stream.getvalue()  # Get the printed output
+
+            if output.strip():  # If there is printed output
+                self.output_area.insert(tk.END, output)
+            else:
+                self.output_area.insert(tk.END, "Code executed successfully with no output.\n")
+        except Exception as e:
+            self.output_area.insert(tk.END, f"Error: {e}\n")
+        finally:
+            sys.stdout = sys.__stdout__  # Reset stdout to its default value
+
+        self.output_area.config(state="disabled")  # Disable editing in the output area
+
