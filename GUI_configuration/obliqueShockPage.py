@@ -113,15 +113,15 @@ class ObliqueShockPage(tk.Frame):
             # Insert results into the table
             row_tags = ["odd", "even"]
             for index, (property, val) in enumerate([
-                ("Wave Angle (β)", round(result["Wave Angle"], 4)),
-                ("Turn Angle (δ)", round(result["Turn Angle"], 4)),
-                ("M1n", round(result["M1n"], 4)),
-                ("M2n", round(result["M2n"], 4)),
-                ("M2", round(result["M2"], 4)),
-                ("p2/p1", round(result["p2/p1"], 4)),
-                ("p02/p01", round(result["p02/p01"], 4)),
-                ("rho2/rho1", round(result["rho2/rho1"], 4)),
-                ("T2/T1", round(result["T2/T1"], 4)),
+                ("Wave Angle (β)", round(result["Wave Angle"], 7)),
+                ("Turn Angle (δ)", round(result["Turn Angle"], 7)),
+                ("M1n", round(result["M1n"], 7)),
+                ("M2n", round(result["M2n"], 7)),
+                ("M2", round(result["M2"], 7)),
+                ("p2/p1", round(result["p2/p1"], 7)),
+                ("p02/p01", round(result["p02/p01"], 7)),
+                ("rho2/rho1", round(result["rho2/rho1"], 7)),
+                ("T2/T1", round(result["T2/T1"], 7)),
             ]):
                 self.result_table.insert("", "end", values=(property, val), tags=(row_tags[index % 2],))
 

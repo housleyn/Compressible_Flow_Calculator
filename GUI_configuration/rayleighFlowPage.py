@@ -131,11 +131,11 @@ class RayleighFlowPage(tk.Frame):
             # Insert results into the table
             row_tags = ["odd", "even"]
             for index, (property, val) in enumerate([
-                ("Mach Number", round(mach, 4)),
-                ("p/p*", round(p_p_star, 4)),
-                ("T/T*", round(T_T_star, 4)),
-                ("T0/T0*", round(T0_T0_star, 4)),
-                ("p0/p0*", round(p0_p0_star, 4)),
+                ("Mach Number", round(mach, 7)),
+                ("p/p*", round(p_p_star, 7)),
+                ("T/T*", round(T_T_star, 7)),
+                ("T0/T0*", round(T0_T0_star, 7)),
+                ("p0/p0*", round(p0_p0_star, 7)),
             ]):
                 self.result_table.insert("", "end", values=(property, val), tags=(row_tags[index % 2],))
 

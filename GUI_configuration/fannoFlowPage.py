@@ -110,12 +110,12 @@ class FannoFlowPage(tk.Frame):
             # Insert results into the table
             row_tags = ["odd", "even"]
             for index, (property, val) in enumerate([
-                ("Mach Number (M)", round(result["M"], 4)),
-                ("T/T*", round(result["T/T*"], 4)),
-                ("p/p*", round(result["p/p*"], 4)),
-                ("p0/p0*", round(result["p0/p0*"], 4)),
-                ("rho/rho*", round(result["rho/rho*"], 4)),
-                ("4fL*/D", round(result["4fL*/D"], 4)),
+                ("Mach Number (M)", round(result["M"], 7)),
+                ("T/T*", round(result["T/T*"], 7)),
+                ("p/p*", round(result["p/p*"], 7)),
+                ("p0/p0*", round(result["p0/p0*"], 7)),
+                ("rho/rho*", round(result["rho/rho*"], 7)),
+                ("4fL*/D", round(result["4fL*/D"], 7)),
             ]):
                 self.result_table.insert("", "end", values=(property, val), tags=(row_tags[index % 2],))
 

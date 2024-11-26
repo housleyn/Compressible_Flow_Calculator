@@ -116,16 +116,16 @@ class IsentropicFlowPage(tk.Frame):
             # Insert results into the table
             row_tags = ["odd", "even"]
             for index, (property, val) in enumerate([
-                ("Mach Number", round(result.mach_number,4)),
+                ("Mach Number", round(result.mach_number,7)),
                 ("Mach Angle", result.mach_angle),
                 ("PM Angle", result.pm_angle),
-                ("T/T0", round(result.t_t0,4)),
-                ("p/p0", round(result.p_p0,4)),
-                ("rho/rho0", round(result.rho_rho0,4)),
-                ("T/T*", round(result.t_ts,4)),
-                ("p/p*", round(result.p_ps,4)),
-                ("rho/rho*", round(result.rho_rhos,4)),
-                ("A/A*", round(result.a_as,4)),
+                ("T/T0", round(result.t_t0,7)),
+                ("p/p0", round(result.p_p0,7)),
+                ("rho/rho0", round(result.rho_rho0,7)),
+                ("T/T*", round(result.t_ts,7)),
+                ("p/p*", round(result.p_ps,7)),
+                ("rho/rho*", round(result.rho_rhos,7)),
+                ("A/A*", round(result.a_as,7)),
             ]):
                 self.result_table.insert("", "end", values=(property, val), tags=(row_tags[index % 2],))
 

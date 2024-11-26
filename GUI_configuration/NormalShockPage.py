@@ -112,13 +112,13 @@ class NormalShockPage(tk.Frame):
             # Insert results into the table
             row_tags = ["odd", "even"]
             for index, (property, val) in enumerate([
-                ("M1", round(result.mach_number1, 4)),
-                ("M2", round(result.mach_number2, 4)),
-                ("p2/p1", round(result.p2p1, 4)),
-                ("p02/p01", round(result.p02p01, 4)),
-                ("rho2/rho1", round(result.r2r1, 4)),
-                ("T2/T1", round(result.t2t1, 4)),
-                ("p1/p02", round(result.p1p02, 4)),
+                ("M1", round(result.mach_number1, 7)),
+                ("M2", round(result.mach_number2, 7)),
+                ("p2/p1", round(result.p2p1, 7)),
+                ("p02/p01", round(result.p02p01, 7)),
+                ("rho2/rho1", round(result.r2r1, 7)),
+                ("T2/T1", round(result.t2t1, 7)),
+                ("p1/p02", round(result.p1p02, 7)),
             ]):
                 self.result_table.insert("", "end", values=(property, val), tags=(row_tags[index % 2],))
 
